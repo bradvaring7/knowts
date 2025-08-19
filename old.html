@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modular Form Output</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .block { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
+    .output { white-space: pre-wrap; background: #f9f9f9; padding: 10px; border: 1px dashed #999; margin-top: 10px; }
+    .controls { margin-top: 10px; }
+    button { margin-right: 10px; }
+    .saved-indicator { color: green; font-weight: bold; margin-left: 10px; }
+  </style>
+</head>
+<body>
+
+  <div class="block" id="block1">
+    <h3>Block 1: Contact Info</h3>
+    <label>Name: <input type="text" class="input" data-label="Name"></label><br>
+    <label>Email: <input type="email" class="input" data-label="Email"></label><br>
+    <div class="controls">
+      <button onclick="saveBlock('block1')">Save</button>
+      <button onclick="copyBlock('block1')">Copy</button>
+      <button onclick="printBlock('block1')">Print</button>
+      <button onclick="downloadBlock('block1')">Download</button>
+      <button onclick="resetBlock('block1')">Reset</button>
+      <span class="saved-indicator" id="saved-block1" style="display:none;">✓ Saved</span>
+    </div>
+    <div class="output" id="output-block1"></div>
+  </div>
+
+  <div class="block" id="block2">
+    <h3>Block 2: Preferences</h3>
+    <label>Favorite Color: <input type="text" class="input" data-label="Favorite Color"></label><br>
+    <label>Subscribe: <input type="checkbox" class="input" data-label="Subscribe"></label><br>
+    <div class="controls">
+      <button onclick="saveBlock('block2')">Save</button>
+      <button onclick="copyBlock('block2')">Copy</button>
+      <button onclick="printBlock('block2')">Print</button>
+      <button onclick="downloadBlock('block2')">Download</button>
+      <button onclick="resetBlock('block2')">Reset</button>
+      <span class="saved-indicator" id="saved-block2" style="display:none;">✓ Saved</span>
+    </div>
+    <div class="output" id="output-block2"></div>
+  </div>
+
+  <script>
+    function formatBlockOutput(blockId) {
+      const block = document.getElementById(blockId);
+      const inputs = block.querySelectorAll('.input');
+      const lines = [];
+      inputs.forEach(input => {
+        const label = input.dataset.label;
+        let value = '';
+        if (input.type === 'checkbox') {
+          value = input.checked ? 'Yes' : 'No';
+        } else {
+          value = input.value.trim();
+        }
+        lines.push(`${label}: ${value}`);
+      });
+      const timestamp = new Date().toLocaleString();
+      lines.push(`Timestamp: ${timestamp}`);
+      return lines.join('\n');
+    }
+
+    function saveBlock(blockId) {
+      const output = formatBlockOutput(blockId);
+      localStorage.setItem(`output-${blockId}`, output);
+      document.getElementById(`output-${blockId}`).textContent = output;
+      document.getElementById(`saved-${blockId}`).style.display = 'inline';
+    }
+
+    function copyBlock(blockId) {
+      const output = document.getElementById(`output-${blockId}`).textContent;
+      navigator.clipboard.writeText(output);
+    }
+
+    function printBlock(blockId) {
+      const output = document.getElementById(`output-${blockId}`).textContent;
+      const win = window.open('', '', 'width=600,height=400');
+      win.document.write(`<pre>${output}</pre>`);
+      win.document.close();
+      win.print();
+    }
+
+    function downloadBlock(blockId) {
+      const output = document.getElementById(`output-${blockId}`).textContent;
+      const blob = new Blob([output], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${blockId}-output.txt`;
+      link.click();
+    }
+
+    function resetBlock(blockId) {
+      const block = document.getElementById(blockId);
+      const inputs = block.querySelectorAll('.input');
+      inputs.forEach(input => {
+        if (input.type === 'checkbox') {
+          input.checked = false;
+        } else {
+          input.value = '';
+        }
+      });
+      document.getElementById(`output-${blockId}`).textContent = '';
+      document.getElementById(`saved-${blockId}`).style.display = 'none';
+      localStorage.removeItem(`output-${blockId}`);
+    }
+
+    // Auto-fill from localStorage
+    window.addEventListener('load', () => {
+      ['block1', 'block2'].forEach(blockId => {
+        const saved = localStorage.getItem(`output-${blockId}`);
+        if (saved) {
+          document.getElementById(`output-${blockId}`).textContent = saved;
+          document.getElementById(`saved-${blockId}`).style.display = 'inline';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
