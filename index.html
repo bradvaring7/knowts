@@ -61,7 +61,18 @@
       <button onclick="copyOutput()">Copy</button>
       <button onclick="saveOutput()">Save</button>
     <div id="output"></div>
-  </div>
+
+    <!-- Date Calculator Section -->
+    <div style="margin-top:2rem; padding:1rem; background:#242424; border-radius:8px; border:1px solid #00ff60;">
+      <h4 style="color:#00ff60; margin-bottom:.5rem;">Date Calculator</h4>
+      <div class="half-group">
+        <input id="baseDate" type="date" style="width:60%" />
+        <input id="daysToAdd" type="number" min="1" max="99" maxlength="2" placeholder="Days (e.g. 30)" style="width:35%" />
+      </div>
+      <button onclick="calcDate()" style="margin-top:.5rem;">Calculate</button>
+      <div id="dateResult" style="margin-top:.5rem; color:#00ff60;"></div>
+    </div>
+    <div id="output"></div>
 
   <script>
     function getFormattedOutput() {
@@ -120,6 +131,26 @@
 
     // Show initial output
     showOutput();
+
+    // Date Calculator logic
+    function calcDate() {
+      const dateInput = document.getElementById('baseDate').value;
+      const daysInput = document.getElementById('daysToAdd').value;
+      const resultDiv = document.getElementById('dateResult');
+      if (!dateInput || !daysInput) {
+        resultDiv.textContent = 'Please select a date and enter days.';
+        return;
+      }
+      const baseDate = new Date(dateInput);
+      const days = parseInt(daysInput, 10);
+      if (isNaN(days) || days < 1 || days > 99) {
+        resultDiv.textContent = 'Enter a valid number (1-99).';
+        return;
+      }
+      baseDate.setDate(baseDate.getDate() + days);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      resultDiv.textContent = `Result: ${baseDate.toLocaleDateString(undefined, options)}`;
+    }
   </script>
 </body>
 </html>

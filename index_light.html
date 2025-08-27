@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Knowts (Light Version)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+      padding: .5rem;
+    }
+    #container {
+      max-width: 22rem;
+      width: 100%;
+      margin: 0 auto;
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    h1,h2,h3 {
+      margin: .3rem 0;
+      padding: 0;
+      line-height: 1;
+      color: #333;
+    }
+    .form-group {
+      display: flex;
+      padding: .3rem 0;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      margin-bottom: .5rem;
+    }
+    .half-group {
+      display: flex;
+      gap: .3rem;
+      padding: .3rem 0;
+      background-color: #eaeaea;
+      border-radius: 5px;
+      margin-bottom: .5rem;
+    }
+    .half-group input {
+      width: 40%;
+    }
+    label {
+      display: block;
+      margin-bottom: .1rem;
+      color: #444;
+    }
+    input, textarea, select {
+      box-sizing: border-box;
+      padding: .5rem;
+      border-radius: 5px;
+      border: 1px solid #bbb;
+      background: #fff;
+      color: #222;
+    }
+    .full {
+      width: 100%;
+    }
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    button {
+      margin: .3rem;
+      padding: .5rem 1rem;
+      border-radius: 5px;
+      border: none;
+      background: #e0e0e0;
+      color: #222;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #d0d0d0;
+    }
+    #output {
+      margin-top: 2rem;
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      color: #222;
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h3>NOTES</h3>
+    <div class="form-group">
+      <textarea id="note" rows="3" placeholder="quick notes here..." class="full"></textarea>
+    </div>
+    <h3>CUSTOMER</h3>
+    <div class="form-group">
+      <input id="name" type="text" placeholder="Customer Name" class="full">
+    </div>
+    <div class="half-group">
+      <input id="acct"  type="number" min="100" max="900000000" placeholder="Acct #">
+      <input id="phone" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" placeholder="Phone">
+    </div>
+    <h3>AFTER CALL</h3>
+    <div class="form-group">
+      <textarea id="what" rows="3" placeholder="What?" class="full"></textarea>
+    </div>
+    <div class="form-group">
+      <textarea id="reso" rows="3" placeholder="Resolution:" class="full"></textarea>
+    </div>
+    <h3>BUGS PEST RODENTS INSECTS</h3>
+    <div class="form-group">
+      <textarea id="pest" rows="3" placeholder="Pests:" class="full"></textarea>
+    </div>
+    <h4>RESERVICE</h4>
+    <div class="form-group">
+      <input id="where" type="text" placeholder="Where?" class="full">
+    </div>
+    <div class="form-group">
+      <input id="when" type="text" placeholder="When?" class="full">
+    </div>
+    <div class="form-group">
+      <input id="many" type="text" placeholder="How Many?" class="full">
+    </div>
+    <h4>SERVICE</h4>
+    <div class="form-group">
+      <textarea id="reason" rows="3" placeholder="Reason?" class="full"></textarea>
+    </div>
+    <div class="form-group">
+      <textarea id="context" rows="3" placeholder="Context:?" class="full"></textarea>
+    </div>
+      <button onclick="copyOutput()">Copy</button>
+      <button onclick="saveOutput()">Save</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    function getFormattedOutput() {
+      const note = document.getElementById('note').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const acct = document.getElementById('acct').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const what = document.getElementById('what').value.trim();
+      const reso = document.getElementById('reso').value.trim();
+      const pest = document.getElementById('pest').value.trim();
+      const where = document.getElementById('where').value.trim();
+      const when = document.getElementById('when').value.trim();
+      const many = document.getElementById('many').value.trim();
+      const reason = document.getElementById('reason').value.trim();
+      const context = document.getElementById('context').value.trim();
+      return `Notes: ${note}\nCX-${acct}  |  Tel: ${phone}\n \nName: ${name}\nWhat? ${what}\nResolution: ${reso}\n  \nWhat? ${pest}\nWhere? ${where}\nWhen? ${when}\nHow Many? ${many}\n \nReason: ${reason}\nContext: ${context}\nPest Situation: ${pest}\n \nSaved on: ${new Date().toLocaleString()}`;
+    }
+
+    function showOutput() {
+      document.getElementById('output').textContent = getFormattedOutput();
+    }
+
+    document.getElementById('note').addEventListener('input', showOutput);
+    document.getElementById('name').addEventListener('input', showOutput);
+    document.getElementById('acct').addEventListener('input', showOutput);
+    document.getElementById('phone').addEventListener('input', showOutput);
+    document.getElementById('what').addEventListener('input', showOutput);
+    document.getElementById('reso').addEventListener('input', showOutput);
+    document.getElementById('pest').addEventListener('input', showOutput);
+    document.getElementById('where').addEventListener('input', showOutput);
+    document.getElementById('when').addEventListener('input', showOutput);
+    document.getElementById('many').addEventListener('input', showOutput);
+    document.getElementById('reason').addEventListener('input', showOutput);
+    document.getElementById('context').addEventListener('input', showOutput);
+
+    function copyOutput() {
+      const output = getFormattedOutput();
+      navigator.clipboard.writeText(output)
+        .then(() => alert('Copied to clipboard!'))
+        .catch(() => alert('Copy failed.'));
+    }
+
+    function saveOutput() {
+      const output = getFormattedOutput();
+      const acct = document.getElementById('acct').value.trim();
+      const now = new Date();
+      const timestamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}`;
+      const filename = acct ? `${acct}_${timestamp}.txt` : `knowts_${timestamp}.txt`;
+      const blob = new Blob([output], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    // Show initial output
+    showOutput();
+  </script>
+</body>
+</html>
